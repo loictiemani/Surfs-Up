@@ -21,11 +21,12 @@ app = Flask(__name__)
 def welcome():
     return (
         f"Available Routes:<br/>"
-        f"Precipitation:/api/v1.0/precipitation<br/>"
-        f"List of Stations:/api/v1.0/stations<br/>"
-        f"Temperature:/api/v1.0/tobs<br/>"
-        f"Temperature from the start date:/api/v1.0/<start><br/>"
-        f"Temperature from start to end date:/api/v1.0/<start>/<end>"
+        f"<a href='api/v1.0/precipitation'>Precipitation</a><br/>"
+        f"<a href='api/v1.0/stations'>List of Stations</a><br/>"
+        f"<a href='api/v1.0/tobs'>Temperature</a><br/>"
+        f"<a href='api/v1.0/startdate'>Temperature from the start date</a><br/>"
+        f"<a href='api/v1.0/start_to_end'>Temperature from start to end date</a><end>"
+    )
     )
 
 @app.route("/api/v1.0/precipitation")
