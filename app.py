@@ -49,14 +49,39 @@ def precipitation():
 #Return a JSON list of stations from the dataset.
 @app.route("/api/v1.0/stations")
 def stations():
-    stations= session.query(Measurement.station).group_by(Measurement.station).all()
-    stations
-    return jsonify(stations)
+    allStations = []
+    Stations_all = session.query(Station.station,Station.name, Station.latitude,Station.longitude, Station.elevation).all()
+    for result2 in Stations_all:
+        row = {}
+        row["station"] = result2[0]
+        row["name"] = result2[1]
+        row["latitude"] = result2[2]
+        row["longitude"] = result2[3]
+        row["elevation"] = result2[4]
+        allStations.append(row)
+    return jsonify(allStations)
 
+#Query the dates and temperature observations of the most active station for the last year of data.
+#Return a JSON list of temperature observations (TOBS) for the previous year.
 
 @app.route("/api/v1.0/tobs")
 def tobs():
-    return f"test text - tobs."
+    last_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+    one_year = dt.timedelta(365)
+    one_year_date = dt.datetime.strptime(last_date[0],"%Y-%m-%d") - one_year  
+    tobs_data = session.query(Measurement.date,Measurement.tobs).filter(Measurement.date> one_year_date).filter(Measurement.station =='USC00519281').order_by(Measurement.date).all()
+
+    tobs = []
+
+    for temperature in tobs_data:
+        row ={}
+        row["Date"] = temperature[0]
+        row["tobs"] = temperature[1]
+
+        tobs.append(row)
+   
+    return jsonify(tobs)
+   
 @app.route("/api/v1.0/startdate")
 def startdate():
     return f"test text - startdate"
