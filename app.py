@@ -34,7 +34,14 @@ def precipitation():
     one_year = dt.timedelta(365)
     one_year_date = dt.datetime.strptime(last_date[0],"%Y-%m-%d") - one_year    
     precipitation_data = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date>one_year_date).order_by(Measurement.date).all()
-    return jsonify(precipitation_data)
+    prcp_totals = []
+    for result in precipitation_data:
+        row = {}
+        row["date"] = result[0]
+        row["prcp"] = result[1]
+        prcp_totals.append(row)
+    
+    return jsonify(prcp_totals)
 
 @app.route("/api/v1.0/stations")
 def stations():
