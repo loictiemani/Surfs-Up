@@ -56,7 +56,6 @@ def startdate():
 def start_to_end():
     return f"test text - start_to_end"
 
-    #print(precipitation_data)
 
 
 
