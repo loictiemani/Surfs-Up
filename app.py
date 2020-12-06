@@ -33,13 +33,13 @@ app = Flask(__name__)
 @app.route("/")
 def welcome():
     return (
-        f"Available Routes:<br/>"
-        f"<a href='api/v1.0/precipitation'>Precipitation</a><br/>"
-        f"<a href='api/v1.0/stations'>List of Stations</a><br/>"
-        f"<a href='api/v1.0/tobs'>Temperature</a><br/>"
-        f"<a href='api/v1.0/startdate'>Temperature from the start date</a><br/>"
-        f"<a href='api/v1.0/start_to_end'>Temperature from start to end date</a><end>"
-    )
+            f"Available Routes:<br/>"
+            f"<a href='api/v1.0/precipitation'>Precipitation</a><br/>"
+            f"<a href='api/v1.0/stations'>List of Stations</a><br/>"
+            f"<a href='api/v1.0/tobs'>Temperature</a><br/>"
+            f"<a href='api/v1.0/2015-03-15'>Temperature from the start date (default '15-03-2015)'</a><br/>"
+            f"<a href='api/v1.0/2015-01-01/2016-01-01'>Temperature from start to end date (default '2015-01-01' to '2016-01-01')</a><end>"
+        )
 #Convert the query results to a dictionary using date as the key and prcp as the value.
 #Return the JSON representation of your dictionary.
     
@@ -104,7 +104,7 @@ def tobs():
 
 @app.route("/api/v1.0/<startdate>")
 def start_date(startdate):
-    session = Session(engine)
+    
     startdate_formated = dt.datetime.strptime(startdate,"%Y-%m-%d")
     stats_temp = session.query(func.max(Measurement.tobs),func.min(Measurement.tobs),func.avg(Measurement.tobs))\
     .filter(Measurement.date > startdate_formated).all()
