@@ -123,12 +123,16 @@ def start_date(startdate):
     #return jsonify(max=stats_temp[0][0], min=stats_temp[0][1], avg=stats_temp[0][2])
     
    
-
 @app.route("/api/v1.0/<startdate>/<enddate>")
 def start_to_end(startdate,enddate):
-
-
-    return jsonify ()
+    session = Session(engine)
+    startdate_formated = dt.datetime.strptime(startdate,"%Y-%m-%d")
+    enddate_formated = dt.datetime.strptime(enddate,"%Y-%m-%d")
+    if (enddate_formated < startdate_formated):
+        return f"start date {startdate} after end date {enddate}"
+    stats_temp = session.query(func.max(Measurement.tobs),func.min(Measurement.tobs),func.avg(Measurement.tobs))\
+    .filter(Measurement.date > startdate_formated ).filter(Measurement.date <= enddate_formated).all()
+    return jsonify(max=stats_temp[0][0], min=stats_temp[0][1], avg=stats_temp[0][2])
 
 # 4. Define main behavior
 if __name__ == "__main__":
