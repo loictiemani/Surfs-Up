@@ -27,20 +27,33 @@ def welcome():
         f"<a href='api/v1.0/startdate'>Temperature from the start date</a><br/>"
         f"<a href='api/v1.0/start_to_end'>Temperature from start to end date</a><end>"
     )
-    )
-
 @app.route("/api/v1.0/precipitation")
 def precipitation():
- 
-
+    
     last_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
     one_year = dt.timedelta(365)
-    one_year_date = dt.datetime.strptime(last_date[0],"%Y-%m-%d") - one_year
-    precipitation_data = session.query(Measurement.date, Measurement.prcp).\
-        filter(Measurement.date>one_year_date).order_by(Measurement.date).all()
+    one_year_date = dt.datetime.strptime(last_date[0],"%Y-%m-%d") - one_year    
+    precipitation_data = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date>one_year_date).order_by(Measurement.date).all()
+    return jsonify(precipitation_data)
 
-    print(precipitation_data)
+@app.route("/api/v1.0/stations")
+def stations():
+    return f"test text - stations"
+@app.route("/api/v1.0/tobs")
+def tobs():
+    return f"test text - tobs."
+@app.route("/api/v1.0/startdate")
+def startdate():
+    return f"test text - startdate"
+@app.route("/api/v1.0/start_to_end")
+def start_to_end():
+    return f"test text - start_to_end"
+
+    #print(precipitation_data)
 
 
 
 #@app.route("/jsonify")    
+# 4. Define main behavior
+if __name__ == "__main__":
+    app.run(debug=True) 
