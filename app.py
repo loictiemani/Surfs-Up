@@ -27,6 +27,9 @@ def welcome():
         f"<a href='api/v1.0/startdate'>Temperature from the start date</a><br/>"
         f"<a href='api/v1.0/start_to_end'>Temperature from start to end date</a><end>"
     )
+#Convert the query results to a dictionary using date as the key and prcp as the value.
+#Return the JSON representation of your dictionary.
+    
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     
@@ -43,9 +46,14 @@ def precipitation():
     
     return jsonify(prcp_totals)
 
+#Return a JSON list of stations from the dataset.
 @app.route("/api/v1.0/stations")
 def stations():
-    return f"test text - stations"
+    stations= session.query(Measurement.station).group_by(Measurement.station).all()
+    stations
+    return jsonify(stations)
+
+
 @app.route("/api/v1.0/tobs")
 def tobs():
     return f"test text - tobs."
@@ -59,7 +67,7 @@ def start_to_end():
 
 
 
-#@app.route("/jsonify")    
+
 # 4. Define main behavior
 if __name__ == "__main__":
     app.run(debug=True) 
