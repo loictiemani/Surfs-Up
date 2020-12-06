@@ -4,14 +4,27 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
+# Dependencies and Setup
 import numpy as np
 import pandas as pd
 import datetime as dt
+
+#################################################
+# Database Setup
+#################################################
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
+
+# Reflect Existing Database Into a New Model
 Base = automap_base()
+
+# Reflect the Tables
 Base.prepare(engine, reflect=True)
+
+# Save References to Each Table
 Measurement = Base.classes.measurement
 Station = Base.classes.station
+
+# Create Session (Link) From Python to the DB
 session = Session(engine)
 #2. Create an app
 app = Flask(__name__)
@@ -85,20 +98,28 @@ def tobs():
    
     return jsonify(tobs)
 
-@app.route("/api/v1.0/startdate")
-def startdate():
+#Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start or start-end range.
+#When given the start only, calculate TMIN, TAVG, and TMAX for all dates greater than and equal to the start date.
+#When given the start and the end date, calculate the TMIN, TAVG, and TMAX for dates between the start and end date inclusive.
 
+@app.route("/api/v1.0/<startdate>")
+def start_date(startdate):
+  
+    sel = [
+      func.min(Measurement.tobs),
+      func.max(Measurement.tobs),
+      func.avg(Measurement.tobs)]
 
-    return f"test text - startdate"
-@app.route("/api/v1.0/start_to_end")
+    min_max_avg_temp = session.query(*sel).all()
+
+    return jsonify(min_max_avg_temp)
+
+@app.route("/api/v1.0/<startdate><start_to_end>")
 def start_to_end():
-    return f"test text - start_to_end"
 
 
-
-
+    return jsonify ()
 
 # 4. Define main behavior
 if __name__ == "__main__":
     app.run(debug=True) 
-
