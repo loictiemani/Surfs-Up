@@ -68,9 +68,12 @@ def stations():
 def tobs():
     last_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
     one_year = dt.timedelta(365)
-    one_year_date = dt.datetime.strptime(last_date[0],"%Y-%m-%d") - one_year  
-    tobs_data = session.query(Measurement.date,Measurement.tobs).filter(Measurement.date> one_year_date).filter(Measurement.station =='USC00519281').order_by(Measurement.date).all()
+    one_year_date = dt.datetime.strptime(last_date[0],"%Y-%m-%d") - one_year 
 
+    tobs_data = session.query(Measurement.date,Measurement.tobs).filter(Measurement.date> one_year_date)\
+        .filter(Measurement.station =='USC00519281').order_by(Measurement.date).all()
+ 
+    
     tobs = []
 
     for temperature in tobs_data:
@@ -81,9 +84,11 @@ def tobs():
         tobs.append(row)
    
     return jsonify(tobs)
-   
+
 @app.route("/api/v1.0/startdate")
 def startdate():
+
+
     return f"test text - startdate"
 @app.route("/api/v1.0/start_to_end")
 def start_to_end():
@@ -96,3 +101,4 @@ def start_to_end():
 # 4. Define main behavior
 if __name__ == "__main__":
     app.run(debug=True) 
+
