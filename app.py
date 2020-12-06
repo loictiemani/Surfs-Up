@@ -104,18 +104,15 @@ def tobs():
 
 @app.route("/api/v1.0/<startdate>")
 def start_date(startdate):
-  
-    sel = [
-      func.min(Measurement.tobs),
-      func.max(Measurement.tobs),
-      func.avg(Measurement.tobs)]
+    session = Session(engine)
+    startdate_formated = dt.datetime.strptime(startdate,"%Y-%m-%d")
+    stats_temp = session.query(func.max(Measurement.tobs),func.min(Measurement.tobs),func.avg(Measurement.tobs))\
+    .filter(Measurement.date > startdate_formated).all()
+    return jsonify(max=stats_temp[0][0], min=stats_temp[0][1], avg=stats_temp[0][2])
+   
 
-    min_max_avg_temp = session.query(*sel).all()
-
-    return jsonify(min_max_avg_temp)
-
-@app.route("/api/v1.0/<startdate><start_to_end>")
-def start_to_end():
+@app.route("/api/v1.0/<startdate><enddate>")
+def start_to_end(startdate,enddate):
 
 
     return jsonify ()
