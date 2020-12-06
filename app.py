@@ -102,16 +102,29 @@ def tobs():
 #When given the start only, calculate TMIN, TAVG, and TMAX for all dates greater than and equal to the start date.
 #When given the start and the end date, calculate the TMIN, TAVG, and TMAX for dates between the start and end date inclusive.
 
-@app.route("/api/v1.0/<startdate>")
+""" @app.route("/api/v1.0/<startdate>")
 def start_date(startdate):
-    
+    session = Session(engine)
     startdate_formated = dt.datetime.strptime(startdate,"%Y-%m-%d")
     stats_temp = session.query(func.max(Measurement.tobs),func.min(Measurement.tobs),func.avg(Measurement.tobs))\
-    .filter(Measurement.date > startdate_formated).all()
+    .filter(Measurement.date > startdate_formated).all() 
+    return jsonify(date = startdate)"""
+
+@app.route("/api/v1.0/<startdate>")
+def start_date(startdate):
+    session = Session(engine)
+    startdate_formated = dt.datetime.strptime(startdate,"%Y-%m-%d")
+    stats_temp = session.query(func.max(Measurement.tobs),func.min(Measurement.tobs),func.avg(Measurement.tobs))\
+    .filter(Measurement.date > startdate_formated ).all()
     return jsonify(max=stats_temp[0][0], min=stats_temp[0][1], avg=stats_temp[0][2])
+    #start_day_list = list(stats_temp)
+        # Return JSON List of Min Temp, Avg Temp and Max Temp for a Given Start Range
+    #return jsonify(start_day_list)
+    #return jsonify(max=stats_temp[0][0], min=stats_temp[0][1], avg=stats_temp[0][2])
+    
    
 
-@app.route("/api/v1.0/<startdate><enddate>")
+@app.route("/api/v1.0/<startdate>/<enddate>")
 def start_to_end(startdate,enddate):
 
 
